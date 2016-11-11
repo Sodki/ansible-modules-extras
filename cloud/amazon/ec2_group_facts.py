@@ -130,9 +130,11 @@ def main():
     else:
         module.fail_json(msg="region must be specified")
 
+    # Replace filter key underscores with dashes, for compatibility, except if we're dealing with tags
     sanitized_filters = module.params.get("filters")
     for key in sanitized_filters:
-      sanitized_filters[key.replace("_", "-")] = sanitized_filters.pop(key)
+        if not key.startswith("tag:"):
+            sanitized_filters[key.replace("_", "-")] = sanitized_filters.pop(key)
 
     try:
         security_groups = connection.describe_security_groups(
