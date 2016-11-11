@@ -93,6 +93,8 @@ try:
 except ImportError:
     HAS_BOTO3 = Falsentry
 
+import traceback
+
 
 def main():
     argument_spec = ec2_argument_spec()
@@ -126,7 +128,7 @@ def main():
             Filters=ansible_dict_to_boto3_filter_list(module.params.get("filters"))
         )
     except ClientError as e:
-        module.fail_json(msg=e.message)
+        module.fail_json(msg=e.message, exception=traceback.format_exc(e))
 
     # Turn the boto3 result in to ansible_friendly_snaked_names
     snaked_security_groups = []
