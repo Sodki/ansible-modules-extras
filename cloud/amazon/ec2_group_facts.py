@@ -65,6 +65,12 @@ EXAMPLES = '''
     filters:
       group-id: sg-12345678
 
+# Gather facts about a security group with multiple filters, also mixing the use of underscores as filter keys
+- ec2_group_facts:
+    filters:
+      group_id: sg-12345678
+      vpc-id: vpc-12345678
+
 # Gather facts about various security groups
 - ec2_group_facts:
     filters:
