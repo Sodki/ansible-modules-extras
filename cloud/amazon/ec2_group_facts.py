@@ -20,7 +20,7 @@ module: ec2_group_facts
 short_description: Gather facts about ec2 security groups in AWS.
 description:
     - Gather facts about ec2 security groups in AWS.
-version_added: "2.2"
+version_added: "2.3"
 author: "Henrique Rodrigues (github.com/Sodki)"
 options:
   filters:
