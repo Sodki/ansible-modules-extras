@@ -27,7 +27,8 @@ options:
     description:
       - A dict of filters to apply. Each dict item consists of a filter key and a filter value. See \
       U(https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html) for \
-      possible filters. Filter names and values are case sensitive.
+      possible filters. Filter names and values are case sensitive. You can also use underscores (_) \
+      instead of dashes (-) in the filter keys, which will take precedence in case of conflict.
     required: false
     default: {}
 notes:
@@ -123,9 +124,13 @@ def main():
     else:
         module.fail_json(msg="region must be specified")
 
+    sanitized_filters = module.params.get("filters")
+    for key in sanitized_filters:
+      sanitized_filters[key.replace("_", "-")] = sanitized_filters.pop(key)
+
     try:
         security_groups = connection.describe_security_groups(
-            Filters=ansible_dict_to_boto3_filter_list(module.params.get("filters"))
+            Filters=ansible_dict_to_boto3_filter_list(sanitized_filters)
         )
     except ClientError as e:
         module.fail_json(msg=e.message, exception=traceback.format_exc(e))
